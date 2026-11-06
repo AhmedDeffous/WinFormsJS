@@ -23,7 +23,13 @@ WinForms JS propose notamment :
 L'idée principale est de rapprocher le modèle de développement Desktop WinForms du développement Web.
 
 Par exemple, un développeur habitué à :
+Button button1 = new Button();
+button1.Text = "Valider";
+button1.Click += Button1_Click;
 
+JavaScript:
+
+var button1 = new Button();
 button1.Text = "Valider";
 button1.Click += Button1_Click;
 
