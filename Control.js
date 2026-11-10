@@ -69,8 +69,10 @@
   }
 
   var DOCKS = { none: 'None', top: 'Top', bottom: 'Bottom', left: 'Left', right: 'Right', fill: 'Fill' };
-  var CURSORS = { default: 'default', hand: 'pointer', ibeam: 'text', waitcursor: 'wait', cross: 'crosshair',
-    sizeall: 'move', no: 'not-allowed', help: 'help' };
+  var CURSORS = {
+    default: 'default', hand: 'pointer', ibeam: 'text', waitcursor: 'wait', cross: 'crosshair',
+    sizeall: 'move', no: 'not-allowed', help: 'help'
+  };
   var DOM_EVENTS = {
     Click: 'click', DoubleClick: 'dblclick', MouseDown: 'mousedown', MouseUp: 'mouseup', MouseMove: 'mousemove',
     MouseEnter: 'mouseenter', MouseLeave: 'mouseleave', MouseWheel: 'wheel',
@@ -137,13 +139,14 @@
     return list;
   }
 
-  // ---------------------------------------------------------------- Control
+  // ---------------------------------------------------------------- Control-------------------
   function Control(tag, cls, existing) {
     injectCss();
     var el = this.element = existing || document.createElement(tag || 'div');
     if (!existing) el.className = 'wf wf-ctl' + (cls ? ' ' + cls : '');
     el.__wf = this;
     this._host = el;
+
     this._name = ''; this._text = ''; this.Tag = null; this.Parent = null;
     this._visible = true; this._enabled = true; this._dock = 'None'; this._anchor = 'Top, Left';
     this._left = 0; this._top = 0; this._width = 100; this._height = 23; this._autoSize = false;
@@ -310,10 +313,38 @@
     Location: {
       get: function () { return { X: this._left, Y: this._top }; },
       set: function (v) { this._left = +v.X || 0; this._top = +v.Y || 0; this._relayout(); }
-    },
+    }/*,
     Size: {
       get: function () { return { Width: this.Width, Height: this.Height }; },
       set: function (v) { this._width = +v.Width || 0; this._height = +v.Height || 0; this._relayout(); }
+    },
+    ClientSize: {
+      get: function () { return { Width: this._host.clientWidth, Height: this._host.clientHeight }; },
+      set: function (v) { this.Size = v; }
+    }*/,
+    Size: {
+      get: function () {
+        return {
+          Width: this.Width,
+          Height: this.Height,
+          IsEmpty: function () { return this.Width === 0 && this.Height === 0; }
+        };
+      },
+      set: function (v) {
+        if (v && typeof v === 'object') {
+          if (v.Width !== undefined && v.Height !== undefined) {
+            this._width = Math.max(0, +v.Width || 0);
+            this._height = Math.max(0, +v.Height || 0);
+          } else if (v.width !== undefined && v.height !== undefined) {
+            this._width = Math.max(0, +v.width || 0);
+            this._height = Math.max(0, +v.height || 0);
+          }
+        } else if (Array.isArray(v) && v.length >= 2) {
+          this._width = Math.max(0, +v[0] || 0);
+          this._height = Math.max(0, +v[1] || 0);
+        }
+        this._relayout();
+      }
     },
     ClientSize: {
       get: function () { return { Width: this._host.clientWidth, Height: this._host.clientHeight }; },
@@ -445,7 +476,7 @@
     s.textContent = Array.isArray(css) ? css.join('') : css;
     document.head.appendChild(s);
   };
-Control.ColorParts = function (Child, map, defaults) {
+  Control.ColorParts = function (Child, map, defaults) {
     Child.prototype._applyColorDefaults = function () {
       if (!defaults) return;
       var st = this.element.style;
@@ -471,6 +502,24 @@ Control.ColorParts = function (Child, map, defaults) {
       })(prop, map[prop]);
     }
   };
-   root.Control = Control;
+  root.Control = Control;
+  //==========================================================
+  /**
+   * Fonction globale pour attacher des événements (compatible WinForms C# -> JS)
+   * @param {Object} target - Le contrôle ou l'élément cible
+   * @param {string} name - Le nom de l'événement (ex: "Click", "Tick", "Load")
+   * @param {Function} handler - La fonction callback liée (.bind(this))
+   */
+  function AddEventHandler(target, name, handler) {
+    if (!target) return;
+    if (typeof target.on === 'function') {
+      target.on(name, handler);
+    } else {
+      target[name] = handler;
+    }
+  }
+  // Rendre la fonction disponible globalement (sur window / root)
+  root.AddEventHandler = AddEventHandler;
+  //==========================================================
   if (typeof module !== 'undefined' && module.exports) module.exports = Control;
 })(typeof window !== 'undefined' ? window : this);

@@ -13,7 +13,10 @@
     '.wf-pb{position:relative;background:var(--wf-field, #fff);border:1px solid var(--wf-border, #7a7a7a);border-radius:2px;overflow:hidden;box-sizing:border-box}',
     '.wf-pb-chunk{position:absolute;left:0;top:0;bottom:0;background:var(--wf-accent, #0078d7);transition:width 0.1s ease-out}',
     '.wf-pb.wf-disabled{background:var(--wf-surface, #f0f0f0);border-color:var(--wf-border-disabled, #bfbfbf)}',
-    '.wf-pb.wf-disabled .wf-pb-chunk{background:var(--wf-text-off, #a0a0a0)}'
+    '.wf-pb.wf-disabled .wf-pb-chunk{background:var(--wf-text-off, #a0a0a0)}',
+    '.wf-progressbar-marquee .wf-progress-fill {background - image: linear - gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);animation: wf - marquee 1.5s infinite linear;  width: 40 % !important;}',
+    '@keyframes wf - marquee {  0 % { transform: translateX(-100 %); }  100 % { transform: translateX(350 %); }}',
+    '.wf - progressbar - continuous.wf - progress - fill {  border - radius: 0;} '
   ].join(''));
 
   function ProgressBar(opts) {
@@ -110,6 +113,24 @@
       set: function (v) {
         var val = parseInt(v, 10);
         if (!isNaN(val)) this._step = val;
+      }
+    },
+    // Inside your ProgressBar property definitions block:
+    Style: {
+      get: function () {
+        return this._progressStyle !== undefined ? this._progressStyle : ProgressBarStyle.Blocks;
+      },
+      set: function (v) {
+        this._progressStyle = +v || 0;
+
+        // Toggle CSS classes on the element for styling/animations
+        this.element.classList.toggle('wf-progressbar-blocks', this._progressStyle === ProgressBarStyle.Blocks);
+        this.element.classList.toggle('wf-progressbar-continuous', this._progressStyle === ProgressBarStyle.Continuous);
+        this.element.classList.toggle('wf-progressbar-marquee', this._progressStyle === ProgressBarStyle.Marquee);
+
+        if (typeof this._updateProgressStyle === 'function') {
+          this._updateProgressStyle();
+        }
       }
     }
   });

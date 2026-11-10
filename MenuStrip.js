@@ -1,5 +1,8 @@
 /*!
- * MenuStrip.js - WinForms MenuStrip + ToolStripMenuItem + ToolStripSeparator, and the drop-down engine shared
+ * MenuStrip.js - 
+*WinForms MenuStrip + 
+*ToolStripMenuItem +
+* ToolStripSeparator, and the drop-down engine shared
  * with ContextMenuStrip.js. Needs Control.js and Theme.js.
  */
 (function (root) {
@@ -42,7 +45,12 @@
   }
 
   // ---------------------------------------------------------------- items
-  function ToolStripSeparator() { this.IsSeparator = true; this._visible = true; this._parentItem = null; this._strip = null; }
+  function ToolStripSeparator() {
+    this.IsSeparator = true;
+    this._visible = true;
+    this._parentItem = null;
+    this._strip = null;
+  }
   Object.defineProperty(ToolStripSeparator.prototype, 'Visible', {
     get: function () { return this._visible; }, set: function (v) { this._visible = !!v; }
   });
@@ -186,7 +194,7 @@
     if (!vis.length) return null;
     var el = document.createElement('div');
     el.className = 'wf wf-dd';
-    
+
     // Héritage automatique du thème (MenuStrip ou SourceControl)
     if (ownerStrip && ownerStrip.element) {
       root.Theme.Inherit(ownerStrip.element, el);
@@ -367,7 +375,7 @@
     this._applyRect();
     strips.push(this);
     if (!keyBound) { keyBound = true; document.addEventListener('keydown', onDocKey); }
-    
+
     if (opts && opts.Theme) {
       this.Theme = opts.Theme;
     }

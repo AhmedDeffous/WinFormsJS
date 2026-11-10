@@ -184,6 +184,172 @@
     'tick': '#e31837', 'tick-off': '#6b8298', 'close': '#e31837', 'star-on': '#ffcc00', 'star-off': '#19396e',
     'link': '#0099ff', 'row-alt': '#0e203f', 'funnel': '#e31837', 'shadow': 'rgba(0,0,0,0.7)'
   };
+  // Palette Mobilis - Version Dark Mode avec une forte dominante de verts et pistache
+  var MOBILIS_PALETTE = {
+    // Fonds & Surfaces sombres (dominante vert-de-gris / noir profond)
+    'page': '#0a1410',
+    'surface': '#102219',
+    'field': '#07120c',
+    'popup': '#102219',
+    'title': '#00e676',
+
+    // Textes
+    'text': '#e0f2f1',
+    'text-dim': '#a7cbc5',
+    'text-off': '#638c82',
+    'accent-text': '#0a1410',
+
+    // Bordures & Cadres verts
+    'border': '#00c853',
+    'border-strong': '#00e676',
+    'border-soft': '#1b4d3e',
+    'border-faint': '#123328',
+    'frame': '#00c853',
+    'window-border': '#00e676',
+    'exp': '#00c853',
+    'button': '#163829',
+    'button-border': '#00c853',
+    'popup-border': '#00e676',
+    'grid': '#123328',
+    'status-border': '#00c853',
+    'border-disabled': '#254a3a',
+    'border-hover': '#00e676',
+    'border3d-dark': '#0b261b',
+    'border3d-light': '#00e676',
+
+    // Barres de titre et de navigation
+    'bar-top': '#143828',
+    'bar-bottom': '#0f291d',
+    'bar-border': '#00c853',
+
+    // Groupes & Lignes
+    'group-line': '#00c853',
+    'group-text': '#9ffb93',
+    'line': '#00c853',
+
+    // États (Hover / Press)
+    'hover': '#1b4d3e',
+    'hover-2': '#236652',
+    'hover-border': '#00e676',
+    'press': '#00e676',
+    'press-2': '#00c853',
+    'press-border': '#0a1410',
+
+    // Accents & Éléments interactifs
+    'accent': '#00c853',
+    'sel-off': '#123328',
+    'sel-soft': '#1b4d3e',
+    'menu-hl': '#00e676',
+    'sep': '#1b4d3e',
+    'grip': '#00c853',
+    'thumb': '#00e676',
+    'thumb-off': '#1b4d3e',
+    'track': '#0a1410',
+    'tick': '#00e676',
+    'tick-off': '#638c82',
+    'close': '#ff5252',
+    'star-on': '#ffea00',
+    'star-off': '#1b4d3e',
+    'link': '#9ffb93',
+    'row-alt': '#0d1c14',
+    'funnel': '#00c853',
+    'shadow': 'rgba(0, 230, 118, 0.25)',
+
+    // En-tête de liste ExListView en Vert Pistache (#9ffb93)
+    'header-bg': '#9ffb93',
+    'header-fore': '#062114' // Texte sombre contrasté pour une lisibilité parfaite sur fond pistache
+  };
+  var ORANGE_PALETTE = {
+    // Fonds & Surfaces sombres (Noir charbon / Gris foncé typique d'Orange)
+    'page': '#0e0e0e',
+    'surface': '#181818',
+    'field': '#111111',
+    'popup': '#181818',
+    'title': '#ff6600',
+
+    // Textes
+    'text': '#ffffff',
+    'text-dim': '#b3b3b3',
+    'text-off': '#777777',
+    'accent-text': '#ffffff',
+
+    // Bordures & Cadres orange
+    'border': '#ff6600',
+    'border-strong': '#ff7722',
+    'border-soft': '#4d2600',
+    'border-faint': '#261300',
+    'frame': '#ff6600',
+    'window-border': '#ff7722',
+    'exp': '#ff6600',
+    'button': '#2a1400',
+    'button-border': '#ff6600',
+    'popup-border': '#ff7722',
+    'grid': '#261300',
+    'status-border': '#ff6600',
+    'border-disabled': '#333333',
+    'border-hover': '#ff7722',
+    'border3d-dark': '#331a00',
+    'border3d-light': '#ff9944',
+
+    // Barres de titre et de navigation
+    'bar-top': '#261300',
+    'bar-bottom': '#181818',
+    'bar-border': '#ff6600',
+
+    // Groupes & Lignes
+    'group-line': '#ff6600',
+    'group-text': '#ff9944',
+    'line': '#ff6600',
+
+    // États (Hover / Press)
+    'hover': '#4d2600',
+    'hover-2': '#663300',
+    'hover-border': '#ff7722',
+    'press': '#ff6600',
+    'press-2': '#cc5200',
+    'press-border': '#ffffff',
+
+    // Accents & Éléments interactifs
+    'accent': '#ff6600',
+    'sel-off': '#261300',
+    'sel-soft': '#4d2600',
+    'menu-hl': '#ff6600',
+    'sep': '#4d2600',
+    'grip': '#ff6600',
+    'thumb': '#ff9944',
+    'thumb-off': '#4d2600',
+    'track': '#0e0e0e',
+    'tick': '#ff6600',
+    'tick-off': '#777777',
+    'close': '#ff3333',
+    'star-on': '#ffcc00',
+    'star-off': '#4d2600',
+    'link': '#ff9944',
+    'row-alt': '#141414',
+    'funnel': '#ff6600',
+    'shadow': 'rgba(255, 102, 0, 0.25)',
+
+    // En-tête de liste ExListView (ton assorti ou pistache/orange selon votre choix)
+    'header-bg': '#ff6600',
+    'header-fore': '#ffffff'
+  };
+  var COCA_COLA_PALETTE = {
+    'page': '#121212', 'surface': '#1e1e1e', 'field': '#161616', 'popup': '#1e1e1e', 'title': '#ff0000',
+    'text': '#ffffff', 'text-dim': '#cccccc', 'text-off': '#888888', 'accent-text': '#ffffff',
+    'border': '#ff0000', 'border-strong': '#cc0000', 'border-soft': '#3d0000', 'border-faint': '#260000',
+    'frame': '#ff0000', 'window-border': '#cc0000', 'exp': '#ff0000', 'button': '#2c0000', 'button-border': '#ff0000',
+    'popup-border': '#cc0000', 'grid': '#260000', 'status-border': '#ff0000', 'border-disabled': '#444444',
+    'border-hover': '#cc0000', 'border3d-dark': '#800000', 'border3d-light': '#ff4d4d',
+    'bar-top': '#cc0000', 'bar-bottom': '#990000', 'bar-border': '#800000',
+    'group-line': '#ff0000', 'group-text': '#ff0000', 'line': '#ff0000',
+    'hover': '#3d0000', 'hover-2': '#5c0000', 'hover-border': '#cc0000',
+    'press': '#cc0000', 'press-2': '#990000', 'press-border': '#ffffff',
+    'accent': '#ff0000', 'sel-off': '#260000', 'sel-soft': '#3d0000', 'menu-hl': '#ff0000',
+    'sep': '#3d0000', 'grip': '#ff0000', 'thumb': '#ff4d4d', 'thumb-off': '#3d0000', 'track': '#121212',
+    'tick': '#ff0000', 'tick-off': '#888888', 'close': '#ff0000', 'star-on': '#ffcc00', 'star-off': '#3d0000',
+    'link': '#ff4d4d', 'row-alt': '#171717', 'funnel': '#ff0000', 'shadow': 'rgba(255, 0, 0, 0.25)',
+    'header-bg': '#ff0000', 'header-fore': '#ffffff'
+  };
   var KEY = 'wf-theme';
   var themes = {}, order = [], current = 'Light', persist = false, handlers = [];
 
@@ -199,8 +365,10 @@
   define('Ooredoo', OOREDOO, 'light');
   define('Caterpillar', CATERPILLAR, 'light');
   define('Ubuntu', UBUNTU, 'light');
-  define('PepsiCola', PEPSI_COLA, 'light');
-
+  define('PepsiCola', PEPSI_COLA, 'Light');
+  define('Mobilis', MOBILIS_PALETTE, 'Dark');
+  define('CocaCola', COCA_COLA_PALETTE, 'Dark');
+  define('Orange', ORANGE_PALETTE, 'Light')
   var ALIASES = { darck: 'Dark', night: 'Dark', black: 'Dark', green: 'GreenNature', nature: 'GreenNature', default: 'Light', white: 'Light' };
 
   // 'dark', 'DARK', 'Darck', 'green nature' ... -> 'Dark', 'GreenNature' (null when unknown)
@@ -242,14 +410,18 @@
   // popups are added to <body>: they copy the theme of the control that opened them
   function inherit(from, to) {
     if (!from || !to) return false;
-    var html = root.document.documentElement;
+
     for (var e = from; e; e = e.parentNode) {
       var a = e.getAttribute && e.getAttribute('data-wf-theme');
-      if (a) return e === html ? false : apply(a, to);
+
+      if (a) {
+        apply(a, to);
+        return true;
+      }
     }
+
     return false;
   }
-
   // ---- follow prefers-color-scheme
   var mq = null, mqFn = null;
   function auto(map) {
@@ -318,5 +490,20 @@
   });
 
   root.Theme = Theme;
+  Theme.RefreshElement = function (root) {
+
+    if (!root) return;
+
+    const themeName =
+      document.documentElement.getAttribute('data-wf-theme');
+
+    if (!themeName) return;
+
+    Theme.Apply(themeName, root);
+
+    root.querySelectorAll('*').forEach(el => {
+      Theme.Apply(themeName, el);
+    });
+  };
   if (typeof module !== 'undefined' && module.exports) module.exports = Theme;
 })(typeof window !== 'undefined' ? window : this);

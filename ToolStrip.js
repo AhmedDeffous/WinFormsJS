@@ -5,7 +5,7 @@
   'use strict';
   var Control = root.Control, esc = Control.Esc;
 
-Control.InjectCss([
+  Control.InjectCss([
     '.wf-ts{display:flex;align-items:center;min-height:26px;padding:2px 3px;',
     'background:linear-gradient(var(--wf-bar-top, #fafbfd), var(--wf-bar-bottom, #e6ebf3));',
     'border:1px solid var(--wf-bar-border, #c5ccd6);color:var(--wf-text, #000);user-select:none;flex-wrap:wrap}',
@@ -15,9 +15,15 @@ Control.InjectCss([
     '.wf-ts-btn.press,.wf-ts-btn.chk{background:var(--wf-press, #cce4f7);border-color:var(--wf-press-border, #569de5)}',
     '.wf-ts-btn.dis{color:var(--wf-text-off, #a0a0a0);opacity:0.6}',
     '.wf-ts-btn img{width:16px;height:16px}',
+    // Flex direction classes for TextImageRelation
+    '.wf-ts-btn.tir-overlay{position:relative;}',
+    '.wf-ts-btn.tir-overlay img{position:absolute;}',
+    '.wf-ts-btn.tir-text-before-image{flex-direction:row-reverse;}',
+    '.wf-ts-btn.tir-image-above-text{flex-direction:column;height:auto;line-height:1.1;align-items:center;padding:2px 4px;}',
+    '.wf-ts-btn.tir-text-above-image{flex-direction:column-reverse;height:auto;line-height:1.1;align-items:center;padding:2px 4px;}',
+
     '.wf-ts-sep{width:1px;height:18px;margin:0 3px;background:var(--wf-sep, #c2c9d3);flex:none}',
     '.wf-ts-lbl{padding:0 4px;font:inherit;color:inherit;flex:none}',
-    // Correction ici : forcer le conteneur et le champ interne à rester dans le flux horizontal
     '.wf-ts-control-host{display:inline-flex;align-items:center;margin:0 3px;flex:none;position:relative}',
     '.wf-ts-control-host > * {position:relative !important; display:inline-block !important;}'
   ].join(''));
@@ -28,6 +34,59 @@ Control.InjectCss([
     if (!img) return '';
     if (/<[a-z][\s\S]*>/i.test(img)) return img;
     return IMG_RE.test(img) ? '<img src="' + esc(img) + '" alt="">' : '<span style="font-size:14px">' + esc(img) + '</span>';
+  }
+
+  // --- Helper for DropDownItems collections ---
+  function initDropDownItems(targetObject, ownerItem) {
+    var list = [];
+    list.Count = 0;
+
+    Object.defineProperty(list, 'Count', {
+      get: function () { return list.length; },
+      configurable: true
+    });
+
+    var adopt = function (it) {
+      if (it && typeof it === 'object') {
+        it._ownerItem = ownerItem;
+      }
+      return it;
+    };
+
+    var makeItem = function (a, b, c, d) {
+      if (a && typeof a === 'object') return a;
+      if (a === '-') return new ToolStripSeparator();
+      return new ToolStripButton(a, b, c, d);
+    };
+
+    list.Add = function (a, b, c, d) {
+      var it = adopt(makeItem(a, b, c, d));
+      list.push(it);
+      return it;
+    };
+
+    list.AddRange = function (arr) {
+      if (Array.isArray(arr)) {
+        arr.forEach(function (x) {
+          list.push(adopt(makeItem(x)));
+        });
+      }
+    };
+
+    list.Remove = function (it) {
+      var i = list.indexOf(it);
+      if (i >= 0) {
+        list.splice(i, 1);
+        it._ownerItem = null;
+      }
+    };
+
+    list.Clear = function () {
+      list.forEach(function (it) { it._ownerItem = null; });
+      list.splice(0, list.length);
+    };
+
+    return list;
   }
 
   // --- ToolStripSeparator ---
@@ -45,8 +104,14 @@ Control.InjectCss([
     this._image = image || null;
     this._checked = false; this._checkOnClick = false;
     this._enabled = true; this._visible = true;
+    this._displayStyle = (root.ToolStripItemDisplayStyle !== undefined) ? root.ToolStripItemDisplayStyle.ImageAndText : 3;
+    this._textImageRelation = (root.TextImageRelation !== undefined) ? root.TextImageRelation.ImageBeforeText : 2;
     this._toolTip = ''; this._name = name || '';
     this._strip = null; this.Tag = null;
+
+    // Initialize DropDownItems collection with .AddRange support
+    this.DropDownItems = initDropDownItems(this, this);
+
     if (typeof onClick === 'function') this.on('Click', onClick);
     if (opts) {
       for (var k in opts) {
@@ -68,6 +133,26 @@ Control.InjectCss([
   Object.defineProperties(BP, {
     Text: { get: function () { return this._text; }, set: function (v) { this._text = v == null ? '' : String(v); if (this._strip) this._strip._render(); } },
     Image: { get: function () { return this._image; }, set: function (v) { this._image = v || null; if (this._strip) this._strip._render(); } },
+    DisplayStyle: {
+      get: function () { return this._displayStyle; },
+      set: function (v) {
+        var num = +v;
+        if (!isNaN(num)) {
+          this._displayStyle = num;
+          if (this._strip) this._strip._render();
+        }
+      }
+    },
+    TextImageRelation: {
+      get: function () { return this._textImageRelation; },
+      set: function (v) {
+        var num = +v;
+        if (!isNaN(num)) {
+          this._textImageRelation = num;
+          if (this._strip) this._strip._render();
+        }
+      }
+    },
     Checked: {
       get: function () { return this._checked; },
       set: function (v) {
@@ -87,6 +172,7 @@ Control.InjectCss([
     this.IsSeparator = false; this.IsLabel = true;
     this._text = text == null ? '' : String(text);
     this._visible = true; this._strip = null; this.Tag = null;
+    this.DropDownItems = initDropDownItems(this, this);
   }
   Object.defineProperties(ToolStripLabel.prototype, {
     Text: { get: function () { return this._text; }, set: function (v) { this._text = v == null ? '' : String(v); if (this._strip) this._strip._render(); } },
@@ -100,11 +186,12 @@ Control.InjectCss([
     this._visible = true;
     this._strip = null;
     this.Tag = null;
-    
+    this.DropDownItems = initDropDownItems(this, this);
+
     var width = opts && opts.Width ? opts.Width : 100;
     this.TextBox = new (root.TextBox || Object)({ Width: width });
     this.element = this.TextBox.element;
-    
+
     Object.defineProperty(this, 'Text', {
       get: function () { return this.TextBox.Text; },
       set: function (v) { this.TextBox.Text = v; }
@@ -129,11 +216,12 @@ Control.InjectCss([
     this._visible = true;
     this._strip = null;
     this.Tag = null;
+    this.DropDownItems = initDropDownItems(this, this);
 
     var width = opts && opts.Width ? opts.Width : 120;
     this.ComboBox = new (root.ComboBox || Object)({ Width: width });
     this.element = this.ComboBox.element;
-    
+
     this.Items = this.ComboBox.Items;
     Object.defineProperties(this, {
       SelectedIndex: {
@@ -220,9 +308,29 @@ Control.InjectCss([
 
       // ToolStripButton standard
       var btn = document.createElement('div');
-      btn.className = 'wf-ts-btn' + (!it._enabled ? ' dis' : '') + (it._checked ? ' chk' : '');
+      var tirClass = '';
+
+      switch (it._textImageRelation) {
+        case 0: tirClass = ' tir-overlay'; break;
+        case 1: tirClass = ' tir-text-before-image'; break;
+        case 2: tirClass = ''; break;
+        case 4: tirClass = ' tir-image-above-text'; break;
+        case 8: tirClass = ' tir-text-above-image'; break;
+        default: tirClass = ''; break;
+      }
+
+      btn.className = 'wf-ts-btn' + tirClass + (!it._enabled ? ' dis' : '') + (it._checked ? ' chk' : '');
       if (it._toolTip) btn.title = it._toolTip;
-      var inner = iconHtml(it._image) + (it._text ? '<span style="margin-inline-start:4px;">' + esc(it._text) + '</span>' : '');
+
+      var showImage = (it._displayStyle === 1 || it._displayStyle === 3);
+      var showText = (it._displayStyle === 2 || it._displayStyle === 3);
+
+      var inner = '';
+      if (showImage) inner += iconHtml(it._image);
+      if (showText && it._text) {
+        var sepMargin = (showImage && it._textImageRelation !== 4 && it._textImageRelation !== 8) ? ' style="margin-inline-start:4px;"' : '';
+        inner += '<span' + sepMargin + '>' + esc(it._text) + '</span>';
+      }
       btn.innerHTML = inner;
 
       btn.addEventListener('mousedown', function () { if (it._enabled && typeof it.PerformClick === 'function') btn.classList.add('press'); });
