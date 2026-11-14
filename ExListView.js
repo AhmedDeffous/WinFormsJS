@@ -2,7 +2,9 @@
  * ExListView.js - web port of the ExtraSeller ExListView (WinForms ListView, Details view)
  * No dependency. CSS is injected automatically.
  *
- *   var lv = new ExListView('#host', {
+ *  var lv= new ExListView();
+ *       lv.Columns.Add(new ColumnHeader('Code',200,ContentAlignement Left));
+ *  var lv = new ExListView ({
  *     Columns: [{ text: 'Code', width: 90 }, { text: 'Prix', width: 100, align: 'right' }],
  *     Items:   [['A001', '1 200,50 DA'], ...],     // or { cells: [...], group, backColor, foreColor, tag }
  *     rtl: false, checkBoxes: false, gridLines: false, multiSelect: true
