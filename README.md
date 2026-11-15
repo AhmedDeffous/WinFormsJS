@@ -59,9 +59,9 @@ WinForms JS cherche à réduire cette complexité pour les développeurs ayant u
 - JavaScript
 - HTML / CSS
 
-📌 Statut du projet En cours de developpement <img width="1123" height="637" alt="image" src="https://github.com/user-attachments/assets/2300201a-ec74-4af1-a8dc-3923c365ff16" />
-
+📌 Statut du projet:
 
 Projet en développement.
 
 L'objectif est d'enrichir progressivement la bibliothèque avec davantage de composants et de fonctionnalités afin de faciliter la migration des applications WinForms vers le Web.En
+Exemple: <img width="1123" height="637" alt="image" src="https://github.com/user-attachments/assets/2300201a-ec74-4af1-a8dc-3923c365ff16" />
