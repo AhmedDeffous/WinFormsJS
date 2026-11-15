@@ -26,13 +26,20 @@ Par exemple, un développeur habitué à :
 Button button1 = new Button();
 button1.Text = "Valider";
 button1.Click += Button1_Click;
-
+private void Button1_Click(object sender,EventArgs e))
+{
+// your work
+}
 JavaScript:
 
 var button1 = new Button();
 button1.Text = "Valider";
-button1.Click += Button1_Click;
+AddEventHandler(this.button1,"Click",(sender,e) => Button1_Click(sender,e));
 
+async Button1_Click(sender,e))
+{
+// your work
+}
 pourrait retrouver une approche similaire côté Web, tout en bénéficiant des technologies ASP.NET, HTML, CSS et JavaScript.
 
 🚀 Pourquoi WinForms JS ?
