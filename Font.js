@@ -14,15 +14,7 @@
 {
     'use strict';
 
-    // S'assure que FontStyle est disponible (depuis enums.js ou l'objet global)
-    const FontStyle = root.FontStyle ||
-    {
-        Regular: 0,
-        Bold: 1,
-        Italic: 2,
-        Underline: 4,
-        Strikeout: 8
-    };
+
 
     class Font
     {

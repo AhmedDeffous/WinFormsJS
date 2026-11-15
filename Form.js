@@ -35,7 +35,7 @@
         cascade = 0;
 
     Control.InjectCss([
-        '.wf-form{display:flex;flex-direction:column;background:var(var(--wf-surface),var(--wf-surface,#f0f0f0));color:var(--form-fg,var(--wf-text,#000));border:1px solid var(--form-bc,var(--wf-window-border,#888));',
+        '.wf-form{display:flex;flex-direction:column;background:var(--wf-surface,#f0f0f0);color:var(--form-fg,var(--wf-text,#000));border:1px solid var(--form-bc,var(--wf-window-border,#888));',
         'box-shadow:0 4px 18px var(--form-shadow,var(--wf-shadow,rgba(0,0,0,.35)))}',
         '.wf-ctl.wf-form.top{position:fixed}',
         '.wf-ctl.wf-form.mdi-container{position:relative;width:100%;height:100%;overflow:hidden;border:0;box-shadow:none}',

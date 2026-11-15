@@ -205,7 +205,57 @@
   };
 
   // ---------------------------------------------------------------- layout (Dock / Anchor)
-  P._scheduleLayout = function () {
+    // Initialiser les propriétés de suspension dans le constructeur de Control (ou via les prototypes)
+    // this._layoutSuspendCount = 0;
+
+    P.SuspendLayout = function () {
+        if (this._layoutSuspendCount === undefined) {
+            this._layoutSuspendCount = 0;
+        }
+        this._layoutSuspendCount++;
+    };
+
+    P.ResumeLayout = function (performLayout)
+    {
+  
+        if (this._layoutSuspendCount === undefined)
+        {
+            this._layoutSuspendCount = 0;
+        }
+
+        if (this._layoutSuspendCount > 0)
+        {
+            this._layoutSuspendCount--;
+        }
+
+        if (this._layoutSuspendCount === 0 && performLayout !== false) {
+            if (typeof this.PerformLayout === 'function') {
+                this.PerformLayout();
+            } else if (typeof this._scheduleLayout === 'function') {
+                this._scheduleLayout();
+            }
+        }
+    };
+
+    // 2. Définition de la méthode utilitaire _isLayoutSuspended (appelée par _scheduleLayout)
+    P._isLayoutSuspended = function () {
+        var curr = this;
+        while (curr) {
+            if (curr._layoutSuspendCount && curr._layoutSuspendCount > 0) {
+                return true;
+            }
+            // Remonte au parent logique ou physique
+            curr = curr.Parent || (curr.element && curr.element.parentElement && curr.element.parentElement.__wfControl);
+        }
+        return false;
+    };
+
+    P._scheduleLayout = function ()
+    {
+        // Si le contrôle ou un de ses parents a le layout suspendu, on ignore la planification
+        if (this._isLayoutSuspended()) {
+            return;
+        }
     var s = this;
     if (s._lp) return;
     var run = function () { s._lp = 0; s.PerformLayout(); };
@@ -229,7 +279,38 @@
     place(this, l, t, w, h);
   };
 
-  P.PerformLayout = function () {
+    P.PerformLayout = function ()
+    {
+
+        // 1. Si l'élément n'existe pas ou n'est pas rattaché au DOM, on sort
+        if (!this.element || !this.element.parentElement)
+        {
+            return;
+        }
+
+        // 2. Si le contrôle n'est pas visible (ou l'un de ses parents est masqué/display: none),
+        // son clientWidth/clientHeight sera 0. Inutile de faire un layout.
+        if (this.element.clientWidth === 0 && this.element.clientHeight === 0)
+        {
+            // Optionnel : vérifier explicitement si le display CSS est 'none' ou offsetParent est null
+            if (this.element.style.display === 'none' || this.element.offsetParent === null)
+            {
+                return;
+            }
+        }
+
+        // Vérification de sécurité : si l'élément n'existe pas encore ou n'a pas de parent/dimensions exploitables
+        if (!this.element || !this.element.parentElement) {
+            return;
+        }
+
+        // Sécurité supplémentaire sur clientWidth / clientHeight au cas où le rendu est masqué (display: none)
+        var w = this.element.clientWidth;
+        var h = this.element.clientHeight;
+        if (w === 0 && h === 0 && this.element.style.display === 'none') {
+            return;
+        }
+       // console.log('var host = this._host:' + this._host);
     var host = this._host, W = host.clientWidth, H = host.clientHeight;
     if (!W && !H) return;                                    // hidden / detached: the observer calls us back
     var p = this._pad, ax = p.l, ay = p.t, aw = W - p.l - p.r, ah = H - p.t - p.b;
@@ -349,7 +430,8 @@
     ClientSize: {
       get: function () { return { Width: this._host.clientWidth, Height: this._host.clientHeight }; },
       set: function (v) { this.Size = v; }
-    },
+      },
+ 
     BackColor: {
       get: function () { return this.element.style.backgroundColor; },
       set: function (v) { this.element.style.backgroundColor = v || ''; }
@@ -502,7 +584,6 @@
       })(prop, map[prop]);
     }
   };
-  root.Control = Control;
   //==========================================================
   /**
    * Fonction globale pour attacher des événements (compatible WinForms C# -> JS)
@@ -520,6 +601,46 @@
   }
   // Rendre la fonction disponible globalement (sur window / root)
   root.AddEventHandler = AddEventHandler;
-  //==========================================================
+    //==========================================================
+    // Ajout de la propriété fictive UseVisualStyleBackColor pour la compatibilité WinForms
+    Object.defineProperty(Control.prototype, 'UseVisualStyleBackColor', {
+        get: function () {
+            return this._useVisualStyleBackColor !== undefined ? this._useVisualStyleBackColor : true;
+        },
+        set: function (v) {
+            this._useVisualStyleBackColor = !!v;
+            // Optionnel : on peux appliquer un style visuel ou ne rien faire si c'est purement cosmétique
+        },
+        configurable: true,
+        enumerable: true
+    });
+    //==========================================================================================
+    // Dans la définition des propriétés de Control.js, ajoutez :
+    Object.defineProperties(P, {
+        // ... vos autres propriétés existantes ...
+
+        AutoScaleMode: {
+            get: function () {
+                return this._autoScaleMode !== undefined ? this._autoScaleMode : (root.AutoScaleMode ? root.AutoScaleMode.Font : 1);
+            },
+            set: function (v) {
+                var CC = root.AutoScaleMode || { None: 0, Font: 1, Dpi: 2, Inherit: 3 };
+                // Supporte les valeurs numériques, les objets de l'enum ou les chaînes ('Font', 'Dpi', 'None', 'Inherit')
+                if (typeof v === 'string') {
+                    var matched = CC[v.charAt(0).toUpperCase() + v.slice(1).toLowerCase()];
+                    this._autoScaleMode = matched !== undefined ? matched : CC.Font;
+                } else if (v !== undefined && v !== null) {
+                    this._autoScaleMode = v;
+                }
+
+                // Comportement fictif / hook d'extensibilité pour appliquer le scaling si nécessaire
+                if (typeof this._applyAutoScale === 'function') {
+                    this._applyAutoScale(this._autoScaleMode);
+                }
+            }
+        }
+    });
+    //===========================================================================
+    root.Control = Control;
   if (typeof module !== 'undefined' && module.exports) module.exports = Control;
 })(typeof window !== 'undefined' ? window : this);

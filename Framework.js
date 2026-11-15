@@ -26,6 +26,7 @@
     basePath = '../WinformJS/';
     // Liste de vos fichiers dans l'ordre strict des dépendances
     var frameworkFiles = [
+        'DateTime.js',
         'Enums.js',
         'Cursors.js',
         'Color.js',
@@ -42,6 +43,8 @@
         'Label.js',
         'Button.js',
         'TextBox.js',
+        'ExTextBox.js',
+        'RichTextBox.js',
         'ComboBox.js',
         'DateTimePicker.js',
         'TrackBar.js',
@@ -63,6 +66,8 @@
         'UserControl.js',
         'Theme.js',
         'StatusBar.js',
+        'CheckBox.js',
+        'RadioButton.js',
         'TextImageRelation.js',
         'ToolStripItemDisplayStyle.js',
         'ToolStripDropDownButton.js',
@@ -71,7 +76,10 @@
         'ToolTip.js',
         'MdiTabFormManager.js',
         'DataTable.js',
-        'Font.js'
+        'Font.js',
+        'List.js',
+        'Guid.js'
+
     ];
 
     // Injection synchrone via document.write en utilisant le même chemin de base
